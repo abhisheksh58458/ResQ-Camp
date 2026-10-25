@@ -237,7 +237,6 @@ public class CampConsolePanel extends JPanel implements DataListener {
             actions.add(checkOut);
 
             JButton discrepancy = DispatchCardPanel.smallButton("Report Discrepancy");
-            discrepancy.setForeground(Theme.ORANGE);
             discrepancy.addActionListener(e -> new DiscrepancyDialog(ownerFrame, store, run, account.displayName).setVisible(true));
             actions.add(discrepancy);
         } else {
@@ -341,8 +340,8 @@ public class CampConsolePanel extends JPanel implements DataListener {
         JToggleButton hold = new JToggleButton(store.holdIncomingTrucks ? "Holding Incoming Trucks" : "Accepting Incoming Trucks",
                 store.holdIncomingTrucks);
         hold.setFocusPainted(false);
-        hold.setForeground(Color.WHITE);
-        hold.setBackground(store.holdIncomingTrucks ? Theme.RED : Theme.GREEN);
+        hold.setForeground(Theme.BUTTON_TEXT);
+        hold.setBackground(Theme.BUTTON_BLUE);
         hold.addActionListener(e -> {
             store.holdIncomingTrucks = hold.isSelected();
             store.addAudit(myCamp + " gate set to " + (store.holdIncomingTrucks ? "HOLD incoming trucks." : "accept incoming trucks."));
@@ -476,8 +475,8 @@ class DiscrepancyDialog extends JDialog {
         buttons.setOpaque(false);
         JButton cancel = new JButton("Cancel");
         JButton save = new JButton("Log discrepancy");
-        save.setBackground(Theme.ACCENT_BLUE);
-        save.setForeground(Color.WHITE);
+        save.setBackground(Theme.BUTTON_BLUE);
+        save.setForeground(Theme.BUTTON_TEXT);
         cancel.addActionListener(e -> dispose());
         save.addActionListener(e -> {
             String type = (String) typeBox.getSelectedItem();

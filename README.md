@@ -51,6 +51,8 @@ A 1440x900 window opens showing the dashboard.
 - **Sign-in and logout** — the login page has a Show/Hide password control;
   use **Log Out** from Settings to return to sign-in without losing the
   current in-memory session data.
+- **Button styling** — buttons use a consistent blue background with black text
+  throughout the application.
 - **Role-specific sign-in** — signing in as a driver opens the Driver Console;
   camp employees open the Camp Console, while admin accounts open the
   operations dashboard.

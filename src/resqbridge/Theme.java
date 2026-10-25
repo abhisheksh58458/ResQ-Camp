@@ -2,6 +2,7 @@ package resqbridge;
 
 import java.awt.Color;
 import java.awt.Font;
+import javax.swing.UIManager;
 
 /** Central color and font palette matching the ResQBridge dashboard. */
 public class Theme {
@@ -14,6 +15,8 @@ public class Theme {
 
     public static final Color ACCENT_BLUE   = new Color(0x3B82F6);
     public static final Color ACCENT_CYAN   = new Color(0x22D3EE);
+    public static final Color BUTTON_BLUE   = new Color(0x2563EB);
+    public static final Color BUTTON_TEXT   = Color.BLACK;
     public static final Color GREEN         = new Color(0x22C55E);
     public static final Color ORANGE        = new Color(0xF59E0B);
     public static final Color RED           = new Color(0xEF4444);
@@ -30,6 +33,15 @@ public class Theme {
     public static final Font FONT_CARD_TITLE= new Font("SansSerif", Font.BOLD, 14);
     public static final Font FONT_BIG_NUM   = new Font("SansSerif", Font.BOLD, 28);
     public static final Font FONT_HUGE_NUM  = new Font("SansSerif", Font.BOLD, 24);
+
+    public static void configureButtonDefaults() {
+        UIManager.put("Button.background", BUTTON_BLUE);
+        UIManager.put("Button.foreground", BUTTON_TEXT);
+        UIManager.put("Button.select", BUTTON_BLUE.darker());
+        UIManager.put("ToggleButton.background", BUTTON_BLUE);
+        UIManager.put("ToggleButton.foreground", BUTTON_TEXT);
+        UIManager.put("ToggleButton.select", BUTTON_BLUE.darker());
+    }
 
     private Theme() {}
 }

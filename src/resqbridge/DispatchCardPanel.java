@@ -48,10 +48,10 @@ public class DispatchCardPanel extends RoundedPanel implements DataListener {
     static JButton smallButton(String text) {
         JButton b = new JButton(text);
         b.setFont(Theme.FONT_SMALL);
-        b.setForeground(Theme.ACCENT_CYAN);
-        b.setBackground(Theme.BG_CARD_ALT);
+        b.setForeground(Theme.BUTTON_TEXT);
+        b.setBackground(Theme.BUTTON_BLUE);
         b.setFocusPainted(false);
-        b.setBorder(BorderFactory.createLineBorder(Theme.BORDER_LIGHT));
+        b.setBorder(BorderFactory.createEmptyBorder(6, 10, 6, 10));
         b.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         return b;
     }
@@ -127,8 +127,8 @@ class AddDispatchDialog extends JDialog {
         buttons.setOpaque(false);
         JButton cancel = new JButton("Cancel");
         JButton save = new JButton("Dispatch");
-        save.setBackground(Theme.ACCENT_BLUE);
-        save.setForeground(Color.WHITE);
+        save.setBackground(Theme.BUTTON_BLUE);
+        save.setForeground(Theme.BUTTON_TEXT);
         cancel.addActionListener(e -> dispose());
         save.addActionListener(e -> {
             String item = itemField.getText().trim();

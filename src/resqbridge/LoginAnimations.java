@@ -283,7 +283,7 @@ class AnimatedButton extends JButton {
         setBorderPainted(false);
         setFocusPainted(false);
         setOpaque(false);
-        setForeground(Color.WHITE);
+        setForeground(Theme.BUTTON_TEXT);
         setFont(Theme.FONT_BOLD);
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
@@ -342,8 +342,8 @@ class AnimatedButton extends JButton {
             left = new Color(0x16A34A);
             right = Theme.GREEN;
         } else {
-            left = Anim.lerp(Theme.ACCENT_BLUE, Theme.ACCENT_CYAN, hover * 0.55f);
-            right = Anim.lerp(new Color(0x1D4ED8), Theme.ACCENT_BLUE, hover);
+            left = Anim.lerp(Theme.BUTTON_BLUE, new Color(0x60A5FA), hover * 0.55f);
+            right = Anim.lerp(new Color(0x1D4ED8), Theme.BUTTON_BLUE, hover);
         }
         g2.setPaint(new GradientPaint(0, 0, left, w, 0, right));
         g2.fillRoundRect(0, press, w, h - 1, 12, 12);
@@ -363,11 +363,11 @@ class AnimatedButton extends JButton {
         int baseline = (h - fm.getHeight()) / 2 + fm.getAscent() + press;
 
         if (busy) {
-            g2.setColor(Color.WHITE);
+            g2.setColor(Theme.BUTTON_TEXT);
             g2.setStroke(new BasicStroke(2.4f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
             g2.drawArc(startX, h / 2 - 8 + press, 16, 16, (int) -angle, 250);
         }
-        g2.setColor(Color.WHITE);
+        g2.setColor(Theme.BUTTON_TEXT);
         g2.drawString(text, startX + spinnerW, baseline);
         g2.dispose();
     }

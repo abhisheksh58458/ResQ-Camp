@@ -11,6 +11,7 @@ public class LoginFrame extends JFrame {
 
     LoginFrame(DataStore store) {
         super("ResQBridge \u2014 Sign In");
+        Theme.configureButtonDefaults();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(440, 560);
         setMinimumSize(new Dimension(380, 520));
@@ -85,8 +86,8 @@ public class LoginFrame extends JFrame {
         error.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JButton signIn = new JButton("Sign In");
-        signIn.setBackground(Theme.ACCENT_BLUE);
-        signIn.setForeground(Color.WHITE);
+        signIn.setBackground(Theme.BUTTON_BLUE);
+        signIn.setForeground(Theme.BUTTON_TEXT);
         signIn.setFocusPainted(false);
         signIn.setAlignmentX(Component.CENTER_ALIGNMENT);
         signIn.setMaximumSize(new Dimension(276, 36));
@@ -154,6 +155,7 @@ public class LoginFrame extends JFrame {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ignored) {
         }
+        Theme.configureButtonDefaults();
         SwingUtilities.invokeLater(() -> new LoginFrame().setVisible(true));
     }
 }

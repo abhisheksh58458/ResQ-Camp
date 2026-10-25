@@ -53,8 +53,8 @@ public class EditCampDialog extends JDialog {
         buttons.setOpaque(false);
         JButton cancel = new JButton("Cancel");
         JButton save = new JButton("Save changes");
-        save.setBackground(Theme.ACCENT_BLUE);
-        save.setForeground(Color.WHITE);
+        save.setBackground(Theme.BUTTON_BLUE);
+        save.setForeground(Theme.BUTTON_TEXT);
         cancel.addActionListener(e -> dispose());
         save.addActionListener(e -> {
             camp.supplyPercent = slider.getValue();

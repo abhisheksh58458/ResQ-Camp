@@ -82,8 +82,8 @@ public class DriverConsolePanel extends JPanel implements DataListener {
         JPanel sos = new JPanel(new BorderLayout(0, 10));
         sos.setOpaque(false);
         JButton sosBtn = new JButton("\uD83D\uDEA8 SOS \u2014 Emergency");
-        sosBtn.setBackground(Theme.RED);
-        sosBtn.setForeground(Color.WHITE);
+        sosBtn.setBackground(Theme.BUTTON_BLUE);
+        sosBtn.setForeground(Theme.BUTTON_TEXT);
         sosBtn.setFont(Theme.FONT_BOLD);
         sosBtn.setFocusPainted(false);
         sosBtn.addActionListener(e -> {
@@ -407,8 +407,8 @@ class HazardReportDialog extends JDialog {
         buttons.setOpaque(false);
         JButton cancel = new JButton("Cancel");
         JButton save = new JButton("Report hazard");
-        save.setBackground(Theme.ACCENT_BLUE);
-        save.setForeground(Color.WHITE);
+        save.setBackground(Theme.BUTTON_BLUE);
+        save.setForeground(Theme.BUTTON_TEXT);
         cancel.addActionListener(e -> dispose());
         save.addActionListener(e -> {
             String loc = locationField.getText().trim();

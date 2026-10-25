@@ -213,13 +213,11 @@ public class SettingsPanel extends JPanel implements DataListener {
             JPanel buttons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 6, 0));
             buttons.setOpaque(false);
             JButton approve = DispatchCardPanel.smallButton("Approve");
-            approve.setForeground(Theme.GREEN);
             approve.addActionListener(e -> {
                 store.pendingAccounts.remove(p);
                 store.addAudit("Approved " + p.name + " as " + p.requestedRole + ".");
             });
             JButton reject = DispatchCardPanel.smallButton("Reject");
-            reject.setForeground(Theme.RED);
             reject.addActionListener(e -> {
                 store.pendingAccounts.remove(p);
                 store.addAudit("Rejected account request from " + p.name + ".");
@@ -495,8 +493,8 @@ public class SettingsPanel extends JPanel implements DataListener {
             l.setForeground(Theme.TEXT_PRIMARY);
             JButton remove = new JButton("\u2715");
             remove.setFont(Theme.FONT_SMALL);
-            remove.setForeground(Theme.RED);
-            remove.setBackground(Theme.BG_CARD_ALT);
+            remove.setForeground(Theme.BUTTON_TEXT);
+            remove.setBackground(Theme.BUTTON_BLUE);
             remove.setFocusPainted(false);
             remove.setMargin(new Insets(0, 6, 0, 6));
             remove.setBorder(BorderFactory.createLineBorder(Theme.BORDER_LIGHT));
@@ -590,8 +588,8 @@ public class SettingsPanel extends JPanel implements DataListener {
                 store.securitySettings.maintenanceMode ? "Maintenance Mode: ON" : "Maintenance Mode: OFF",
                 store.securitySettings.maintenanceMode);
         maintToggle.setFocusPainted(false);
-        maintToggle.setForeground(Color.WHITE);
-        maintToggle.setBackground(store.securitySettings.maintenanceMode ? Theme.RED : Theme.GREEN);
+        maintToggle.setForeground(Theme.BUTTON_TEXT);
+        maintToggle.setBackground(Theme.BUTTON_BLUE);
         maintenanceStatus = new JLabel(store.securitySettings.maintenanceMode
                 ? "The platform is in read-only maintenance mode."
                 : "The platform is operating normally.");
@@ -600,7 +598,7 @@ public class SettingsPanel extends JPanel implements DataListener {
         maintToggle.addActionListener(e -> {
             store.securitySettings.maintenanceMode = maintToggle.isSelected();
             maintToggle.setText(store.securitySettings.maintenanceMode ? "Maintenance Mode: ON" : "Maintenance Mode: OFF");
-            maintToggle.setBackground(store.securitySettings.maintenanceMode ? Theme.RED : Theme.GREEN);
+            maintToggle.setBackground(Theme.BUTTON_BLUE);
             maintenanceStatus.setText(store.securitySettings.maintenanceMode
                     ? "The platform is in read-only maintenance mode."
                     : "The platform is operating normally.");

@@ -75,8 +75,8 @@ public class DonorsCardPanel extends RoundedPanel implements DataListener {
         JButton delete = new JButton("\u2715");
         delete.setToolTipText("Remove donor");
         delete.setFont(Theme.FONT_SMALL);
-        delete.setForeground(Theme.RED);
-        delete.setBackground(Theme.BG_CARD_ALT);
+        delete.setForeground(Theme.BUTTON_TEXT);
+        delete.setBackground(Theme.BUTTON_BLUE);
         delete.setFocusPainted(false);
         delete.setMargin(new Insets(0, 6, 0, 6));
         delete.setBorder(BorderFactory.createLineBorder(Theme.BORDER_LIGHT));
@@ -133,8 +133,8 @@ class AddDonorDialog extends JDialog {
         buttons.setOpaque(false);
         JButton cancel = new JButton("Cancel");
         JButton save = new JButton("Add donor");
-        save.setBackground(Theme.ACCENT_BLUE);
-        save.setForeground(Color.WHITE);
+        save.setBackground(Theme.BUTTON_BLUE);
+        save.setForeground(Theme.BUTTON_TEXT);
         cancel.addActionListener(e -> dispose());
         save.addActionListener(e -> {
             String name = nameField.getText().trim();

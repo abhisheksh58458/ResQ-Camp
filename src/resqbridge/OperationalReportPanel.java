@@ -31,8 +31,8 @@ public class OperationalReportPanel extends JPanel {
         title.setForeground(Theme.TEXT_PRIMARY);
 
         JButton downloadPdf = new JButton("Download PDF");
-        downloadPdf.setBackground(Theme.ACCENT_BLUE);
-        downloadPdf.setForeground(Color.WHITE);
+        downloadPdf.setBackground(Theme.BUTTON_BLUE);
+        downloadPdf.setForeground(Theme.BUTTON_TEXT);
         downloadPdf.setFocusPainted(false);
         downloadPdf.addActionListener(e -> exportPdf());
 

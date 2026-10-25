@@ -10,6 +10,7 @@ public class ResQBridgeApp extends JFrame {
 
     public ResQBridgeApp(DataStore store, LoginAccount account) {
         super("ResQBridge - Disaster Relief Logistics System");
+        Theme.configureButtonDefaults();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1440, 900);
         setMinimumSize(new Dimension(1100, 700));
@@ -85,6 +86,7 @@ public class ResQBridgeApp extends JFrame {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ignored) {
         }
+        Theme.configureButtonDefaults();
         SwingUtilities.invokeLater(() -> new ResQBridgeApp().setVisible(true));
     }
 }

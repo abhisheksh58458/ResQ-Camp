@@ -117,8 +117,8 @@ public class DriversPanel extends JPanel implements DataListener {
 
         JToggleButton dutyToggle = new JToggleButton(d.onDuty ? "On Duty" : "Off Duty", d.onDuty);
         dutyToggle.setFocusPainted(false);
-        dutyToggle.setForeground(Color.WHITE);
-        dutyToggle.setBackground(d.onDuty ? Theme.GREEN : Theme.TEXT_FAINT);
+        dutyToggle.setForeground(Theme.BUTTON_TEXT);
+        dutyToggle.setBackground(Theme.BUTTON_BLUE);
         dutyToggle.addActionListener(e -> {
             d.onDuty = dutyToggle.isSelected();
             if (!d.onDuty) d.reached = false;
@@ -128,7 +128,6 @@ public class DriversPanel extends JPanel implements DataListener {
         right.add(Box.createHorizontalStrut(6));
 
         JButton remove = DispatchCardPanel.smallButton("Remove");
-        remove.setForeground(Theme.RED);
         remove.addActionListener(e -> {
             int confirm = JOptionPane.showConfirmDialog(this,
                     "Remove " + d.name + " from the driver roster?", "Remove driver",
@@ -175,8 +174,8 @@ class AddDriverDialog extends JDialog {
         buttons.setOpaque(false);
         JButton cancel = new JButton("Cancel");
         JButton save = new JButton("Add driver");
-        save.setBackground(Theme.ACCENT_BLUE);
-        save.setForeground(Color.WHITE);
+        save.setBackground(Theme.BUTTON_BLUE);
+        save.setForeground(Theme.BUTTON_TEXT);
         cancel.addActionListener(e -> dispose());
         save.addActionListener(e -> {
             String name = nameField.getText().trim();
