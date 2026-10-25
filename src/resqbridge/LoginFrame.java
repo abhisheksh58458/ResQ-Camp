@@ -6,6 +6,10 @@ import java.awt.*;
 public class LoginFrame extends JFrame {
 
     public LoginFrame() {
+        this(new DataStore());
+    }
+
+    LoginFrame(DataStore store) {
         super("ResQBridge \u2014 Sign In");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(440, 560);
@@ -13,8 +17,6 @@ public class LoginFrame extends JFrame {
         setLocationRelativeTo(null);
         getContentPane().setBackground(Theme.BG_APP);
         setLayout(new GridBagLayout());
-
-        DataStore store = new DataStore();
 
         RoundedPanel card = new RoundedPanel(Theme.BG_CARD, Theme.BORDER, 18);
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
@@ -54,7 +56,27 @@ public class LoginFrame extends JFrame {
 
         card.add(fieldBlock("Username", userField));
         card.add(Box.createVerticalStrut(12));
-        card.add(fieldBlock("Password", passField));
+        JPanel passwordRow = new JPanel(new BorderLayout(6, 0));
+        passwordRow.setOpaque(false);
+        passwordRow.setAlignmentX(Component.LEFT_ALIGNMENT);
+        passwordRow.setMaximumSize(new Dimension(276, 34));
+        passField.setMaximumSize(new Dimension(220, 34));
+        char passwordEchoChar = passField.getEchoChar();
+        passwordRow.add(passField, BorderLayout.CENTER);
+        JButton togglePassword = new JButton("Show");
+        togglePassword.setFocusable(false);
+        togglePassword.setMargin(new Insets(4, 8, 4, 8));
+        togglePassword.addActionListener(e -> {
+            if (passField.getEchoChar() == 0) {
+                passField.setEchoChar(passwordEchoChar);
+                togglePassword.setText("Show");
+            } else {
+                passField.setEchoChar((char) 0);
+                togglePassword.setText("Hide");
+            }
+        });
+        passwordRow.add(togglePassword, BorderLayout.EAST);
+        card.add(fieldBlock("Password", passwordRow));
         card.add(Box.createVerticalStrut(18));
 
         JLabel error = new JLabel(" ");
@@ -64,7 +86,7 @@ public class LoginFrame extends JFrame {
 
         JButton signIn = new JButton("Sign In");
         signIn.setBackground(Theme.ACCENT_BLUE);
-        signIn.setForeground(Color.cyan);
+        signIn.setForeground(Color.WHITE);
         signIn.setFocusPainted(false);
         signIn.setAlignmentX(Component.CENTER_ALIGNMENT);
         signIn.setMaximumSize(new Dimension(276, 36));

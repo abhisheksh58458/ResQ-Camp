@@ -8,7 +8,11 @@ public class HeaderPanel extends JPanel {
     private final JLabel dot = new JLabel();
     private Timer blinkTimer;
 
-    public HeaderPanel(LoginAccount account, Runnable onLogout) {
+    public HeaderPanel() {
+        this("System Admin", "Admin");
+    }
+
+    public HeaderPanel(String displayName, String role) {
         setLayout(new BorderLayout());
         setBackground(Theme.BG_PANEL);
         setBorder(BorderFactory.createCompoundBorder(
@@ -52,37 +56,16 @@ public class HeaderPanel extends JPanel {
         center.add(liveLabel);
         add(center, BorderLayout.CENTER);
 
-        // Right: signed-in user + logout
-        JPanel right = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+        // Right: admin
+        JPanel right = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
         right.setOpaque(false);
-        JPanel userCol = new JPanel();
-        userCol.setOpaque(false);
-        userCol.setLayout(new BoxLayout(userCol, BoxLayout.Y_AXIS));
-        JLabel name = new JLabel(account.displayName);
-        name.setFont(Theme.FONT_BOLD);
-        name.setForeground(Theme.TEXT_PRIMARY);
-        name.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        JLabel role = new JLabel(account.role);
-        role.setFont(Theme.FONT_SMALL);
-        role.setForeground(Theme.TEXT_MUTED);
-        role.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        userCol.add(name);
-        userCol.add(role);
-
-        JLabel avatar = new JLabel(new AppIcon(AppIcon.Kind.PERSON, 24, Theme.TEXT_MUTED));
-
-        JButton logout = new JButton("Logout");
-        logout.setFont(Theme.FONT_SMALL);
-        logout.setForeground(Theme.ACCENT_CYAN);
-        logout.setBackground(Theme.BG_CARD_ALT);
-        logout.setFocusPainted(false);
-        logout.setBorder(BorderFactory.createLineBorder(Theme.BORDER_LIGHT));
-        logout.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        logout.addActionListener(e -> onLogout.run());
-
-        right.add(avatar);
-        right.add(userCol);
-        right.add(logout);
+        JLabel admin = new JLabel(displayName + " \u00B7 " + role,
+                new AppIcon(AppIcon.Kind.PERSON, 20, Theme.TEXT_MUTED), SwingConstants.LEFT);
+        admin.setFont(Theme.FONT_BASE);
+        admin.setForeground(Theme.TEXT_PRIMARY);
+        admin.setHorizontalTextPosition(SwingConstants.LEFT);
+        admin.setIconTextGap(8);
+        right.add(admin);
         add(right, BorderLayout.EAST);
 
         blinkTimer = new Timer(700, e -> {

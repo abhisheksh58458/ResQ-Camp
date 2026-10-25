@@ -24,11 +24,24 @@ public class DriverConsolePanel extends JPanel implements DataListener {
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(16, 16, 16, 16));
 
+        JPanel pageHeader = new JPanel(new BorderLayout());
+        pageHeader.setOpaque(false);
         JLabel title = new JLabel("Driver Console \u2014 " + account.displayName);
         title.setFont(Theme.FONT_TITLE);
         title.setForeground(Theme.TEXT_PRIMARY);
         title.setBorder(BorderFactory.createEmptyBorder(0, 4, 12, 0));
-        add(title, BorderLayout.NORTH);
+        JButton logout = DispatchCardPanel.smallButton("Log Out");
+        logout.addActionListener(e -> {
+            store.addAudit(account.displayName + " signed out.");
+            store.removeListener(this);
+            ownerFrame.dispose();
+            LoginFrame login = new LoginFrame(store);
+            login.setLocationRelativeTo(null);
+            login.setVisible(true);
+        });
+        pageHeader.add(title, BorderLayout.WEST);
+        pageHeader.add(logout, BorderLayout.EAST);
+        add(pageHeader, BorderLayout.NORTH);
 
         JPanel col = new JPanel();
         col.setOpaque(false);

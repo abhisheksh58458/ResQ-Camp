@@ -25,10 +25,24 @@ public class SettingsPanel extends JPanel implements DataListener {
         setLayout(new BorderLayout(0, 14));
         setBorder(BorderFactory.createEmptyBorder(16, 16, 16, 16));
 
+        JPanel pageHeader = new JPanel(new BorderLayout());
+        pageHeader.setOpaque(false);
         JLabel pageTitle = new JLabel("Settings");
         pageTitle.setFont(Theme.FONT_TITLE);
         pageTitle.setForeground(Theme.TEXT_PRIMARY);
-        add(pageTitle, BorderLayout.NORTH);
+
+        JButton logout = DispatchCardPanel.smallButton("Log Out");
+        logout.addActionListener(e -> {
+            store.addAudit("Signed out.");
+            store.removeListener(this);
+            ownerFrame.dispose();
+            LoginFrame login = new LoginFrame(store);
+            login.setLocationRelativeTo(null);
+            login.setVisible(true);
+        });
+        pageHeader.add(pageTitle, BorderLayout.WEST);
+        pageHeader.add(logout, BorderLayout.EAST);
+        add(pageHeader, BorderLayout.NORTH);
 
         JPanel content = new JPanel(new BorderLayout(0, 14));
         content.setOpaque(false);

@@ -11,10 +11,9 @@ import java.util.function.Consumer;
 public class SidebarPanel extends JPanel {
 
     private final Map<String, RoundedPanel> navRows = new LinkedHashMap<>();
-    private String selected;
+    private String selected = "Dashboard";
 
-    public SidebarPanel(String[][] items, String initialSelected, Consumer<String> onSelect) {
-        this.selected = initialSelected;
+    public SidebarPanel(Consumer<String> onSelect) {
         setLayout(new BorderLayout());
         setBackground(Theme.BG_PANEL);
         setPreferredSize(new Dimension(220, 0));
@@ -24,6 +23,18 @@ public class SidebarPanel extends JPanel {
         nav.setOpaque(false);
         nav.setLayout(new BoxLayout(nav, BoxLayout.Y_AXIS));
         nav.setBorder(BorderFactory.createEmptyBorder(16, 12, 16, 12));
+
+        String[][] items = {
+                {"Dashboard", "DASHBOARD"},
+                {"Relief Camps", "CAMP"},
+                {"Donors", "DONOR"},
+                {"Supply Inventory", "INVENTORY"},
+                {"Dispatch", "DISPATCH"},
+                {"Drivers", "DRIVER"},
+                {"Alerts", "ALERT"},
+                {"Reports", "REPORT"},
+                {"Settings", "SETTINGS"},
+        };
 
         for (String[] item : items) {
             String label = item[0];

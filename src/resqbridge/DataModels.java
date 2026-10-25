@@ -55,7 +55,7 @@ class Driver {
     boolean onDuty;
     String destination = "";
     boolean reached = false;
-    int fuelPercent = 80;
+    int fuelPercent = 72;
     String maintenanceIssue = "";
     java.time.LocalDateTime shiftStart = null;
 
@@ -74,8 +74,11 @@ class Driver {
     }
 
     double hoursOnShift() {
-        if (shiftStart == null) return 0;
-        return java.time.Duration.between(shiftStart, java.time.LocalDateTime.now()).toMinutes() / 60.0;
+        if (!onDuty || shiftStart == null) {
+            return 0.0;
+        }
+        long minutes = java.time.Duration.between(shiftStart, java.time.LocalDateTime.now()).toMinutes();
+        return Math.max(0, minutes) / 60.0;
     }
 }
 
@@ -170,17 +173,15 @@ class SecuritySettings {
     String platformNotice = "";
 }
 
-/** A login account. role is one of "Admin", "Driver", "Camp Employee". */
 class LoginAccount {
     String username;
     String password;
     String displayName;
     String role;
-    String linkedDriverName; // for role == "Driver"
-    String linkedCampName;   // for role == "Camp Employee"
+    String linkedDriverName = "";
+    String linkedCampName = "";
 
-    LoginAccount(String username, String password, String displayName, String role,
-                 String linkedDriverName, String linkedCampName) {
+    LoginAccount(String username, String password, String displayName, String role, String linkedDriverName, String linkedCampName) {
         this.username = username;
         this.password = password;
         this.displayName = displayName;
@@ -190,7 +191,6 @@ class LoginAccount {
     }
 }
 
-/** A chat message on a channel (e.g. "driver:Anil Kumar" or "camp:Thrissur Camp"). */
 class ChatMessage {
     String channel;
     String fromName;
@@ -207,37 +207,59 @@ class ChatMessage {
     }
 }
 
-/** A hazard reported by a driver along a route. */
-class HazardReport {
-    String reporter;
-    String location;
-    String type;     // Flooding, Landslide, Blocked Road, Other
-    String severity; // High, Medium, Low
-    String time;
-
-    HazardReport(String reporter, String location, String type, String severity, String time) {
-        this.reporter = reporter;
-        this.location = location;
-        this.type = type;
-        this.severity = severity;
-        this.time = time;
-    }
-}
-
-/** A known rest stop / fuel station / secure parking area. */
-class SafeZone {
+class ManifestItem {
     String name;
-    String type;
-    double distanceKm;
+    int qty;
+    String priority;
 
-    SafeZone(String name, String type, double distanceKm) {
+    ManifestItem(String name, int qty, String priority) {
         this.name = name;
-        this.type = type;
-        this.distanceKm = distanceKm;
+        this.qty = qty;
+        this.priority = priority;
     }
 }
 
-/** Shared equipment (forklifts, hand trucks, pallets, ...) at camps. */
+class DeliveryRun {
+    String driverName;
+    String fromLocation;
+    String toCamp;
+    String status;
+    int etaMinutes;
+    final List<ManifestItem> items = new ArrayList<>();
+    String checkInTime = "";
+    String checkOutTime = "";
+    String storageAllocation = "Central Warehouse — General Storage";
+    String offloadTeam = "";
+    final List<String> discrepancies = new ArrayList<>();
+    String proofNote = "";
+    boolean proofSigned = false;
+
+    DeliveryRun(String driverName, String fromLocation, String toCamp, String status, int etaMinutes) {
+        this(driverName, fromLocation, toCamp, new ArrayList<>(), status, etaMinutes);
+    }
+
+    DeliveryRun(String driverName, String fromLocation, String toCamp, List<ManifestItem> items,
+               String status, int etaMinutes) {
+        this.driverName = driverName;
+        this.fromLocation = fromLocation;
+        this.toCamp = toCamp;
+        this.status = status;
+        this.etaMinutes = etaMinutes;
+        if (items != null) {
+            this.items.addAll(items);
+        }
+    }
+
+    boolean hasCriticalOrPerishable() {
+        for (ManifestItem item : items) {
+            if ("Critical".equals(item.priority) || "Perishable".equals(item.priority)) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
 class EquipmentItem {
     String name;
     int total;
@@ -250,50 +272,31 @@ class EquipmentItem {
     }
 }
 
-/** One line of a delivery manifest. */
-class ManifestItem {
-    String name;
-    int qty;
-    String priority; // "Critical", "Perishable", "Standard"
+class HazardReport {
+    String reporter;
+    String location;
+    String type;
+    String severity;
+    String time;
 
-    ManifestItem(String name, int qty, String priority) {
-        this.name = name;
-        this.qty = qty;
-        this.priority = priority;
+    HazardReport(String reporter, String location, String type, String severity, String time) {
+        this.reporter = reporter;
+        this.location = location;
+        this.type = type;
+        this.severity = severity;
+        this.time = time;
     }
 }
 
-/** A single truck run from an origin to a destination camp, tracked end-to-end. */
-class DeliveryRun {
-    String driverName;
-    String fromLocation;
-    String toCamp;
-    List<ManifestItem> items;
-    String status; // Loading, En Route, Arrived at Gate, Unloading, Completed
-    int etaMinutes;
-    String checkInTime = "";
-    String checkOutTime = "";
-    boolean proofSigned = false;
-    String proofNote = "";
-    List<String> discrepancies = new ArrayList<>();
-    String storageAllocation = "";
-    String offloadTeam = "";
+class SafeZone {
+    String name;
+    String type;
+    double distanceKm;
 
-    DeliveryRun(String driverName, String fromLocation, String toCamp, List<ManifestItem> items,
-                String status, int etaMinutes) {
-        this.driverName = driverName;
-        this.fromLocation = fromLocation;
-        this.toCamp = toCamp;
-        this.items = items;
-        this.status = status;
-        this.etaMinutes = etaMinutes;
-    }
-
-    boolean hasCriticalOrPerishable() {
-        for (ManifestItem m : items) {
-            if ("Critical".equals(m.priority) || "Perishable".equals(m.priority)) return true;
-        }
-        return false;
+    SafeZone(String name, String type, double distanceKm) {
+        this.name = name;
+        this.type = type;
+        this.distanceKm = distanceKm;
     }
 }
 
@@ -331,20 +334,22 @@ class DataStore {
     final IntegrationSettings integrationSettings = new IntegrationSettings();
     final List<String> resourceCategories = new ArrayList<>();
     final SecuritySettings securitySettings = new SecuritySettings();
-
-    // --- Role accounts, driver ops, and camp ops state ---
     final List<LoginAccount> accounts = new ArrayList<>();
     final List<ChatMessage> chatMessages = new ArrayList<>();
+    final List<DeliveryRun> deliveryRuns = new ArrayList<>();
     final List<HazardReport> hazardReports = new ArrayList<>();
     final List<SafeZone> safeZones = new ArrayList<>();
     final List<EquipmentItem> equipment = new ArrayList<>();
-    final List<DeliveryRun> deliveryRuns = new ArrayList<>();
-    int gateMaxCapacity = 3;
     boolean holdIncomingTrucks = false;
+    int gateMaxCapacity = 4;
 
     private final List<DataListener> listeners = new ArrayList<>();
 
     DataStore() {
+        accounts.add(new LoginAccount("admin", "admin123", "Asha Nair", "Admin", "", ""));
+        accounts.add(new LoginAccount("driver1", "driver123", "Anil Kumar", "Driver", "Anil Kumar", ""));
+        accounts.add(new LoginAccount("camp1", "camp123", "Maya Thomas", "Camp Employee", "", "Kochi Hub"));
+
         camps.add(new Camp("Kasaragod Camp", 75, 0.28, 0.10, false, true));
         camps.add(new Camp("Kannur Camp", 62, 0.36, 0.22, false, true));
         camps.add(new Camp("Kozhikode Camp", 80, 0.44, 0.34, false, true));
@@ -387,47 +392,40 @@ class DataStore {
         pendingAccounts.add(new PendingAccount("Meera Pillai", "meera.pillai@example.com", "Field Rescue Team", "Today"));
         pendingAccounts.add(new PendingAccount("Joseph Varkey", "joseph.v@example.com", "Volunteer", "Yesterday"));
 
+        chatMessages.add(new ChatMessage("driver:Anil Kumar", "Dispatch", "Admin", "Driver check-in confirmed.", nowTime()));
+        chatMessages.add(new ChatMessage("camp:Kochi Hub", "Dispatch", "Admin", "Gate team ready for receiving shift.", nowTime()));
+
+        DeliveryRun run1 = new DeliveryRun("Anil Kumar", "Kochi Hub", "Thrissur Camp", "En Route", 42);
+        run1.items.add(new ManifestItem("Medical kits", 18, "Critical"));
+        run1.items.add(new ManifestItem("Water packs", 40, "Normal"));
+        run1.items.add(new ManifestItem("Insulin chillers", 4, "Perishable"));
+        run1.storageAllocation = "Cold-Storage Unit A (medical / perishable)";
+        deliveryRuns.add(run1);
+
+        DeliveryRun run2 = new DeliveryRun("Rajesh Menon", "Kozhikode Camp", "Kannur Camp", "Arrived at Gate", 15);
+        run2.items.add(new ManifestItem("Food packs", 120, "Normal"));
+        run2.items.add(new ManifestItem("Blankets", 50, "Normal"));
+        run2.checkInTime = nowTime();
+        run2.offloadTeam = "Field Crew 2";
+        deliveryRuns.add(run2);
+
+        hazardReports.add(new HazardReport("Dispatch", "NH 66 near Kannur", "Road block", "High", nowTime()));
+        hazardReports.add(new HazardReport("Maya Thomas", "Kochi Inner Ring", "Flooding", "Medium", nowTime()));
+
+        safeZones.add(new SafeZone("Aster Fuel Stop", "Fuel Station", 12));
+        safeZones.add(new SafeZone("Rajagiri School Shelter", "Shelter", 8));
+        safeZones.add(new SafeZone("Aluva Rest Point", "Rest Area", 18));
+
+        equipment.add(new EquipmentItem("Forklifts", 6, 2));
+        equipment.add(new EquipmentItem("Hand trucks", 18, 5));
+        equipment.add(new EquipmentItem("Pallets", 28, 8));
+
         auditLog.add(new AuditLogEntry(nowTime(), "System started and default data loaded."));
 
         resourceCategories.add("Emergency Vehicles");
         resourceCategories.add("Medical Supplies");
         resourceCategories.add("Shelter Capacity");
         resourceCategories.add("Food & Water");
-
-        accounts.add(new LoginAccount("admin", "admin123", "Arjun Menon", "Admin", null, null));
-        accounts.add(new LoginAccount("driver1", "driver123", "Anil Kumar", "Driver", "Anil Kumar", null));
-        accounts.add(new LoginAccount("camp1", "camp123", "Priya Nair", "Camp Employee", null, "Thrissur Camp"));
-
-        safeZones.add(new SafeZone("Aluva Rest Stop", "Rest Stop \u00B7 Food", 12));
-        safeZones.add(new SafeZone("Edappally Secure Parking", "Secure Parking", 20));
-        safeZones.add(new SafeZone("Perumbavoor Fuel Station", "Fuel Station", 8));
-        safeZones.add(new SafeZone("Angamaly Police Checkpoint", "Safe Zone \u00B7 Checkpoint", 15));
-
-        equipment.add(new EquipmentItem("Forklift", 2, 1));
-        equipment.add(new EquipmentItem("Hand Truck", 6, 2));
-        equipment.add(new EquipmentItem("Pallets", 40, 15));
-
-        deliveryRuns.add(new DeliveryRun("Anil Kumar", "Kochi Hub", "Thrissur Camp",
-                new ArrayList<>(Arrays.asList(
-                        new ManifestItem("Medical Kits", 40, "Critical"),
-                        new ManifestItem("Rice Bags", 100, "Standard"))),
-                "En Route", 25));
-        deliveryRuns.add(new DeliveryRun("Rajesh Menon", "Kozhikode Camp", "Kannur Camp",
-                new ArrayList<>(Arrays.asList(
-                        new ManifestItem("Food Packets", 120, "Standard"))),
-                "Loading", 60));
-        deliveryRuns.add(new DeliveryRun("Deepa Thomas", "Kollam Camp", "Kochi Hub",
-                new ArrayList<>(Arrays.asList(
-                        new ManifestItem("Water Cans", 300, "Standard"),
-                        new ManifestItem("Baby Formula", 20, "Critical"))),
-                "Arrived at Gate", 0));
-
-        chatMessages.add(new ChatMessage("driver:Anil Kumar", "Dispatch", "Admin",
-                "Route to Thrissur Camp is clear as of this morning. Drive safe.", nowTime()));
-        chatMessages.add(new ChatMessage("camp:Thrissur Camp", "Dispatch", "Admin",
-                "Truck from Kochi Hub is loaded with medical kits, priority unload.", nowTime()));
-
-        drivers.get(0).shiftStart = java.time.LocalDateTime.now().minusHours(3);
     }
 
     static String nowTime() {
@@ -452,25 +450,27 @@ class DataStore {
         return n;
     }
 
+    Driver findDriver(String name) {
+        for (Driver d : drivers) {
+            if (d.name.equals(name)) return d;
+        }
+        return null;
+    }
+
+    int gateCurrentCount() {
+        int n = 0;
+        for (DeliveryRun run : deliveryRuns) {
+            if (!run.checkOutTime.isEmpty()) continue;
+            if (!run.checkInTime.isEmpty()) n++;
+        }
+        return n;
+    }
+
     int overallStockPercent() {
         if (inventory.isEmpty()) return 0;
         int sum = 0;
         for (int v : inventory.values()) sum += v;
         return Math.round(sum / (float) inventory.size());
-    }
-
-    int gateCurrentCount() {
-        int n = 0;
-        for (DeliveryRun r : deliveryRuns) {
-            if ("Arrived at Gate".equals(r.status) || "Unloading".equals(r.status)) n++;
-        }
-        return n;
-    }
-
-    Driver findDriver(String name) {
-        if (name == null) return null;
-        for (Driver d : drivers) if (d.name.equals(name)) return d;
-        return null;
     }
 
     void addListener(DataListener l) { listeners.add(l); }
